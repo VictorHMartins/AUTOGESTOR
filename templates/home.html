@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="text-center mt-10">
+    <h1 class="text-3xl font-bold">Bem-vindo ao Autogestor 🚗</h1>
+    <p class="mt-4">Escolha uma opção para continuar:</p>
+    <div class="mt-6">
+      <a href="{% url 'login' %}" class="bg-green-600 text-white px-4 py-2 rounded">Login</a>
+      <a href="{% url 'register' %}" class="bg-blue-600 text-white px-4 py-2 rounded">Registrar</a>
+    </div>
+  </div>
+{% endblock %}
