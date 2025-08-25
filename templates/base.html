@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Autogestor</title>
-  {% load static %}   <!-- ESSA LINHA É OBRIGATÓRIA -->
-  <link href="{% static 'css/output.css' %}" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Autogestor</title>
+    {% load static %} <!-- ESSA LINHA É OBRIGATÓRIA -->
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
 </head>
+
 <body class="bg-gray-200 text-red-600">
-  <nav class="bg-black text-white p-4">
-    <div class="container mx-auto flex justify-between">
-      <a href="/" class="font-bold text-lg">Autogestor</a>
-      <div>
-        <a href="{% url 'login' %}" class="px-3">Login</a>
-        <a href="{% url 'register' %}" class="px-3">Registrar</a>
-      </div>
-    </div>
-  </nav>
-  <main class="container mx-auto p-4">
-    {% block content %}{% endblock %}
-  </main>
+    <nav class="bg-[#0d1b2a] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="/" class="font-bold text-xl text-[#00b4d8]">AutoGestor</a>
+            <div>
+                <a href="{% url 'login' %}" class="px-3 hover:text-[#ffc300]">Login</a>
+                <a href="{% url 'register' %}" class="px-3 hover:text-[#f77f00]">Registrar</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-4">
+        {% block content %}{% endblock %}
+    </main>
 </body>
+
 </html>
