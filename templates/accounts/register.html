@@ -1,11 +1,81 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
-  <h2 class="text-2xl font-bold mb-4">Criar Conta</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded">Registrar</button>
-  </form>
+<div class="min-h-screen flex items-center justify-center bg-[#0d1b2a]">
+  <div class="bg-[#1b263b] p-8 rounded-xl shadow-lg w-full max-w-lg">
+    
+    {% if tipo %}
+      <h2 class="text-3xl font-bold text-center text-[#00b4d8] mb-6">Cadastro de {{ tipo }}</h2>
+    {% else %}
+      <h2 class="text-3xl font-bold text-center text-[#00b4d8] mb-6">Criar Conta</h2>
+    {% endif %}
+
+    <form method="post" class="space-y-4">
+      {% csrf_token %}
+
+      <!-- Nome de usuário -->
+      <div>
+        <label for="id_username" class="block text-gray-300 mb-1">Usuário</label>
+        {{ form.username }}
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="id_email" class="block text-gray-300 mb-1">Email</label>
+        {{ form.email }}
+      </div>
+
+      <!-- Telefone -->
+      <div>
+        <label for="id_phone" class="block text-gray-300 mb-1">Telefone</label>
+        {{ form.phone }}
+      </div>
+
+      <!-- CPF / CNPJ -->
+      <div>
+        <label for="id_cpf_cnpj" class="block text-gray-300 mb-1">CPF / CNPJ</label>
+        {{ form.cpf_cnpj }}
+      </div>
+
+      <!-- Endereço -->
+      <div>
+        <label for="id_address" class="block text-gray-300 mb-1">Endereço</label>
+        {{ form.address }}
+      </div>
+
+      <!-- Cidade -->
+      <div>
+        <label for="id_city" class="block text-gray-300 mb-1">Cidade</label>
+        {{ form.city }}
+      </div>
+
+      <!-- Estado -->
+      <div>
+        <label for="id_state" class="block text-gray-300 mb-1">Estado</label>
+        {{ form.state }}
+      </div>
+
+      <!-- Senha -->
+      <div>
+        <label for="id_password" class="block text-gray-300 mb-1">Senha</label>
+        {{ form.password }}
+      </div>
+
+      <!-- Confirmar Senha -->
+      <div>
+        <label for="id_confirm_password" class="block text-gray-300 mb-1">Confirmar Senha</label>
+        {{ form.confirm_password }}
+      </div>
+
+      <button type="submit" 
+              class="w-full bg-[#00b4d8] hover:bg-[#0096c7] text-white font-semibold py-3 rounded-lg transition">
+        Registrar
+      </button>
+    </form>
+
+    <p class="text-gray-400 text-center mt-4">
+      Já tem conta?
+      <a href="{% url 'login' %}" class="text-[#f77f00] hover:underline">Entrar</a>
+    </p>
+  </div>
 </div>
 {% endblock %}

@@ -2,43 +2,47 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-from django.contrib.auth import get_user_model
-from django import forms
-
-User = get_user_model()
-
-# Formulário de registro
-class RegisterForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
-    confirm_password = forms.CharField(widget=forms.PasswordInput)
-
-    class Meta:
-        model = User
-        fields = ["username", "email", "user_type", "password"]
-
-    def clean(self):
-        cleaned_data = super().clean()
-        password = cleaned_data.get("password")
-        confirm_password = cleaned_data.get("confirm_password")
-        if password != confirm_password:
-            raise forms.ValidationError("As senhas não conferem!")
-        return cleaned_data
+from .forms import RegisterForm
 
 
-def register_view(request):
+# 🔹 Tela inicial para escolher tipo de cadastro
+def choose_register_view(request):
+    return render(request, "accounts/choose_register.html")
+
+
+# 🔹 Cadastro de Cliente
+def register_cliente_view(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
+            user.user_type = "cliente"   # fixa como cliente
             user.set_password(form.cleaned_data["password"])
             user.save()
-            messages.success(request, "Conta criada com sucesso! Faça login.")
+            messages.success(request, "Conta de cliente criada com sucesso! Faça login.")
             return redirect("login")
     else:
         form = RegisterForm()
-    return render(request, "accounts/register.html", {"form": form})
+    return render(request, "accounts/register.html", {"form": form, "tipo": "Cliente"})
 
 
+# 🔹 Cadastro de Oficina
+def register_oficina_view(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.user_type = "oficina"   # fixa como oficina
+            user.set_password(form.cleaned_data["password"])
+            user.save()
+            messages.success(request, "Conta de oficina criada com sucesso! Faça login.")
+            return redirect("login")
+    else:
+        form = RegisterForm()
+    return render(request, "accounts/register.html", {"form": form, "tipo": "Oficina"})
+
+
+# 🔹 Login
 def login_view(request):
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
@@ -51,6 +55,7 @@ def login_view(request):
     return render(request, "accounts/login.html", {"form": form})
 
 
+# 🔹 Logout
 def logout_view(request):
     logout(request)
     return redirect("login")

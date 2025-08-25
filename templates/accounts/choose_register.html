@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-[#0d1b2a] text-white">
+  <div class="text-center space-y-6">
+    <h1 class="text-3xl font-bold text-[#00b4d8]">Como deseja se cadastrar?</h1>
+    <p class="text-gray-400">Escolha abaixo o tipo de conta:</p>
+    
+    <div class="flex justify-center space-x-6 mt-6">
+      <a href="{% url 'register_cliente' %}" 
+         class="bg-[#00b4d8] hover:bg-[#0096c7] px-8 py-4 rounded-lg text-xl font-semibold shadow-lg">
+         Sou Cliente
+      </a>
+      <a href="{% url 'register_oficina' %}" 
+         class="bg-[#f77f00] hover:bg-[#e76f00] px-8 py-4 rounded-lg text-xl font-semibold shadow-lg">
+         Sou Oficina
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
