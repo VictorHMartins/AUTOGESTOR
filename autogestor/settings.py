@@ -46,6 +46,14 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_REDIRECT_URL = '/accounts/profile-redirect/'
 LOGOUT_REDIRECT_URL = '/'
 
+# 🔹 Configurações do django-allauth
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None   # não existe username no User
+ACCOUNT_EMAIL_REQUIRED = True              # email é obrigatório
+ACCOUNT_USERNAME_REQUIRED = False          # não queremos username
+ACCOUNT_AUTHENTICATION_METHOD = "email"    # login sempre por email
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True
+ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_UNIQUE_EMAIL = True
 
 SOCIALACCOUNT_LOGIN_ON_GET = True  
 

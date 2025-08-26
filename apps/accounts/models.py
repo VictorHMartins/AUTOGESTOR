@@ -1,23 +1,42 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
+class UserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError("O e-mail é obrigatório")
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        return self.create_user(email, password, **extra_fields)
+
+
 class User(AbstractUser):
+    username = None
+    email = models.EmailField(unique=True)
+
     USER_TYPE_CHOICES = (
         ('cliente', 'Cliente'),
         ('oficina', 'Oficina'),
     )
+    user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='cliente')
 
-    user_type = models.CharField(
-        max_length=20,
-        choices=USER_TYPE_CHOICES,
-        default='cliente'
-    )
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
+
+    objects = UserManager()
 
     def __str__(self):
-        return f"{self.username} ({self.get_user_type_display()})"
+        return f"{self.email} ({self.get_user_type_display()})"
 
 
 class ClienteProfile(models.Model):
@@ -29,7 +48,7 @@ class ClienteProfile(models.Model):
     state = models.CharField(max_length=50, blank=True, null=True, verbose_name="Estado")
 
     def __str__(self):
-        return f"Cliente: {self.user.username}"
+        return f"Cliente: {self.user.email}"
 
     class Meta:
         verbose_name = "Perfil de Cliente"
@@ -45,7 +64,7 @@ class OficinaProfile(models.Model):
     state = models.CharField(max_length=50, blank=True, null=True, verbose_name="Estado")
 
     def __str__(self):
-        return f"Oficina: {self.nome_fantasia} ({self.user.username})"
+        return f"Oficina: {self.nome_fantasia} ({self.user.email})"
 
     class Meta:
         verbose_name = "Perfil de Oficina"
@@ -59,4 +78,4 @@ def create_user_profile(sender, instance, created, **kwargs):
         if instance.user_type == 'cliente':
             ClienteProfile.objects.create(user=instance)
         elif instance.user_type == 'oficina':
-            OficinaProfile.objects.create(user=instance, nome_fantasia=instance.username)
+            OficinaProfile.objects.create(user=instance, nome_fantasia=instance.email)

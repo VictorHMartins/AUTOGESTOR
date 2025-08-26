@@ -4,30 +4,80 @@
 <div class="flex items-center justify-center min-h-screen bg-gray-900">
   <div class="w-full max-w-md p-8 rounded-2xl shadow-xl bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#334155]">
 
-    <h2 class="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-[#00b4d8] to-[#48cae4] text-transparent bg-clip-text">
+    <h2 class="text-2xl font-bold text-center text-cyan-400 mb-6">
       Complete seu Perfil
     </h2>
+
+    <!-- 🔹 Bloco de erros -->
+    {% if form.errors %}
+      <div class="bg-red-600 text-white p-3 rounded-lg text-sm mb-4">
+        <ul class="list-disc pl-5">
+          {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+              <li><strong>{{ field|title }}</strong>: {{ error }}</li>
+            {% endfor %}
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
 
     <form method="POST" class="space-y-4">
       {% csrf_token %}
 
       <div>
-        <label class="block text-sm font-medium text-gray-300">CPF</label>
-        <input type="text" name="cpf" value="{{ profile.cpf|default_if_none:'' }}"
-          class="w-full px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:ring-2 focus:ring-[#00b4d8] focus:outline-none">
+        <label class="block text-sm text-gray-200">Telefone</label>
+        <input type="text" name="phone" value="{{ form.phone.value|default:'' }}"
+          class="w-full px-4 py-2 rounded-lg bg-gray-800 text-gray-100" required>
       </div>
 
       <div>
-        <label class="block text-sm font-medium text-gray-300">Telefone</label>
-        <input type="text" name="telefone" value="{{ profile.telefone|default_if_none:'' }}"
-          class="w-full px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:ring-2 focus:ring-[#00b4d8] focus:outline-none">
+        <label class="block text-sm text-gray-200">CPF</label>
+        <input type="text" name="cpf" value="{{ form.cpf.value|default:'' }}"
+          class="w-full px-4 py-2 rounded-lg bg-gray-800 text-gray-100" required>
+      </div>
+
+      <div>
+        <label class="block text-sm text-gray-200">Data de Nascimento</label>
+        <input type="date" name="data_nascimento" value="{{ form.data_nascimento.value|default:'' }}"
+          class="w-full px-4 py-2 rounded-lg bg-gray-800 text-gray-100" required>
+      </div>
+
+      <div>
+        <label class="block text-sm text-gray-200">Cidade</label>
+        <select id="city" name="city"
+          class="w-full px-4 py-2 rounded-lg bg-gray-800 text-gray-100" required>
+          <option value="">Carregando cidades...</option>
+        </select>
       </div>
 
       <button type="submit"
         class="w-full py-3 mt-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg transition">
-        Salvar
+        Salvar Perfil
       </button>
     </form>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const selectCity = document.getElementById("city");
+    try {
+      const response = await fetch("https://servicodados.ibge.gov.br/api/v1/localidades/municipios");
+      const cidades = await response.json();
+      cidades.sort((a, b) => a.nome.localeCompare(b.nome));
+      selectCity.innerHTML = '<option value="">Selecione sua cidade</option>';
+      cidades.forEach(cidade => {
+        const option = document.createElement("option");
+        option.value = cidade.nome;
+        option.textContent = cidade.nome;
+        if (option.value === "{{ form.city.value|default:'' }}") {
+          option.selected = true;
+        }
+        selectCity.appendChild(option);
+      });
+    } catch (error) {
+      selectCity.innerHTML = '<option value="">Erro ao carregar cidades</option>';
+    }
+  });
+</script>
 {% endblock %}

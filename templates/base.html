@@ -1,55 +1,58 @@
 <!DOCTYPE html>
 <html lang="pt-br" class="scroll-smooth overflow-x-hidden">
+
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AutoGestor</title>
-    {% load static %}
-    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AutoGestor</title>
+  {% load static %}
+  <link href="{% static 'css/output.css' %}" rel="stylesheet">
 </head>
+
 <body class="bg-gray-900 text-white">
-    <!-- Navbar -->
-    <nav class="w-full bg-gray-950 shadow-md">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            
-            <!-- Logo / Nome -->
-            <a href="/" class="text-2xl font-bold bg-gradient-to-r from-[#00b4d8] to-[#48cae4] text-transparent bg-clip-text">
-                AutoGestor
-            </a>
-            
-            <!-- Menu -->
-            <div class="flex items-center space-x-4">
-                {% if user.is_authenticated %}
-                    <span class="hidden sm:inline text-gray-300">
-                        Olá, {{ user.first_name|default:user.username }}
-                    </span>
-                    <a href="{% url 'account_logout' %}" 
-                       class="px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-medium transition">
-                        Logout
-                    </a>
-                {% else %}
-                    <a href="{% url 'account_login' %}" 
-                       class="px-4 py-2 rounded-lg bg-[#00b4d8] hover:bg-[#0096c7] text-white font-medium transition">
-                        Login
-                    </a>
-                    <a href="{% url 'register' %}" 
-                       class="px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-medium transition">
-                        Registrar
-                    </a>
-                {% endif %}
-            </div>
-        </div>
-    </nav>
+  <!-- Navbar -->
+  <nav class="w-full bg-gray-950 shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
-    <!-- Conteúdo -->
-    <main class="min-h-screen">
-        {% block content %}
-        {% endblock %}
-    </main>
+      <!-- Logo / Nome -->
+      <a href="/" class="text-2xl font-bold bg-gradient-to-r from-[#00b4d8] to-[#48cae4] text-transparent bg-clip-text">
+        AutoGestor
+      </a>
 
-    <!-- Footer simples -->
-    <footer class="bg-gray-950 py-6 text-center text-gray-400 text-sm">
-        © 2025 AutoGestor — Todos os direitos reservados
-    </footer>
+      <!-- Menu -->
+      <div class="flex items-center space-x-4">
+        {% if user.is_authenticated %}
+        <span class="hidden sm:inline text-gray-300">
+          Olá, {{ user.first_name|default:user.email }}
+        </span>
+        <a href="{% url 'logout' %}"
+          class="px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-medium transition">
+          Logout
+        </a>
+        {% else %}
+        <a href="{% url 'login' %}"
+          class="px-4 py-2 rounded-lg bg-[#00b4d8] hover:bg-[#0096c7] text-white font-medium transition">
+          Login
+        </a>
+        <a href="{% url 'register' %}"
+          class="px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-medium transition">
+          Registrar
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Conteúdo -->
+  <main class="min-h-screen">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <!-- Footer simples -->
+  <footer class="bg-gray-950 py-6 text-center text-gray-400 text-sm">
+    © 2025 AutoGestor — Todos os direitos reservados
+  </footer>
 </body>
+
 </html>
