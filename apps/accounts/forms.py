@@ -1,22 +1,23 @@
 from django import forms
-from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
+from .models import User, ClienteProfile, OficinaProfile
 
-User = get_user_model()
 
-class RegisterForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput, label="Senha")
-    confirm_password = forms.CharField(widget=forms.PasswordInput, label="Confirmar Senha")
+class RegisterForm(UserCreationForm):
+    user_type = forms.ChoiceField(choices=User.USER_TYPE_CHOICES, label="Tipo de usuário")
 
     class Meta:
         model = User
-        fields = ["username", "email", "user_type", "phone", "cpf_cnpj", "address", "city", "state", "password"]
+        fields = ["username", "email", "password1", "password2", "user_type"]
 
-    def clean(self):
-        cleaned_data = super().clean()
-        password = cleaned_data.get("password")
-        confirm_password = cleaned_data.get("confirm_password")
 
-        if password and confirm_password and password != confirm_password:
-            raise forms.ValidationError("As senhas não conferem!")
+class ClienteProfileForm(forms.ModelForm):
+    class Meta:
+        model = ClienteProfile
+        fields = ["phone", "cpf", "data_nascimento", "city", "state"]
 
-        return cleaned_data
+
+class OficinaProfileForm(forms.ModelForm):
+    class Meta:
+        model = OficinaProfile
+        fields = ["nome_fantasia", "cnpj", "phone", "city", "state"]

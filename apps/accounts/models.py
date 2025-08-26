@@ -16,34 +16,40 @@ class User(AbstractUser):
         default='cliente'
     )
 
-    # Dados extras
-    phone = models.CharField(max_length=20, blank=True, null=True, verbose_name="Telefone")
-    cpf_cnpj = models.CharField(max_length=20, blank=True, null=True, unique=True, verbose_name="CPF/CNPJ")
-
-    # Endereço
-    address = models.CharField(max_length=255, blank=True, null=True, verbose_name="Endereço")
-    city = models.CharField(max_length=100, blank=True, null=True, verbose_name="Cidade")
-    state = models.CharField(max_length=50, blank=True, null=True, verbose_name="Estado")
-
     def __str__(self):
         return f"{self.username} ({self.get_user_type_display()})"
 
 
 class ClienteProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cliente_profile")
+    phone = models.CharField(max_length=20, blank=True, null=True, verbose_name="Telefone")
+    cpf = models.CharField(max_length=20, blank=True, null=True, unique=True, verbose_name="CPF")
     data_nascimento = models.DateField(null=True, blank=True, verbose_name="Data de Nascimento")
+    city = models.CharField(max_length=100, blank=True, null=True, verbose_name="Cidade")
+    state = models.CharField(max_length=50, blank=True, null=True, verbose_name="Estado")
 
     def __str__(self):
-        return f"Perfil Cliente: {self.user.username}"
+        return f"Cliente: {self.user.username}"
+
+    class Meta:
+        verbose_name = "Perfil de Cliente"
+        verbose_name_plural = "Perfis de Clientes"
 
 
 class OficinaProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="oficina_profile")
     nome_fantasia = models.CharField(max_length=150, verbose_name="Nome Fantasia")
     cnpj = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    phone = models.CharField(max_length=20, blank=True, null=True, verbose_name="Telefone")
+    city = models.CharField(max_length=100, blank=True, null=True, verbose_name="Cidade")
+    state = models.CharField(max_length=50, blank=True, null=True, verbose_name="Estado")
 
     def __str__(self):
         return f"Oficina: {self.nome_fantasia} ({self.user.username})"
+
+    class Meta:
+        verbose_name = "Perfil de Oficina"
+        verbose_name_plural = "Perfis de Oficinas"
 
 
 # 🔹 Criar perfil automaticamente ao cadastrar usuário
